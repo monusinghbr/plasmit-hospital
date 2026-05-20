@@ -66,7 +66,7 @@ export const navigationItems: NavigationItem[] = [
   { id: "front-office", label: "Front Office", icon: Home, route: "/front-office", group: "Operations", allowedRoles: ["Super Admin", "Hospital Admin", "Receptionist", "Management"], status: "ready" },
   { id: "patients", label: "Patient", icon: IdCard, route: "/patients", group: "Clinical", allowedRoles: allRoles, status: "ready" },
   { id: "appointments", label: "Appointment", icon: CalendarClock, route: "/appointments", group: "Clinical", allowedRoles: ["Super Admin", "Hospital Admin", "Receptionist", "Doctor", "Nurse", "Billing Executive", "Management"], status: "ready" },
-  { id: "opd", label: "OPD", icon: Stethoscope, route: "/opd", group: "Clinical", allowedRoles: ["Super Admin", "Hospital Admin", "Doctor", "Nurse", "Receptionist"], status: "planned" },
+  { id: "opd", label: "OPD", icon: Stethoscope, route: "/opd", group: "Clinical", allowedRoles: ["Super Admin", "Hospital Admin", "Doctor", "Nurse", "Receptionist", "Pharmacist", "Lab Technician", "Management"], status: "ready" },
   { id: "ipd", label: "IPD", icon: BedDouble, route: "/ipd", group: "Clinical", allowedRoles: ["Super Admin", "Hospital Admin", "Doctor", "Nurse"], status: "planned" },
   { id: "emergency", label: "Emergency", icon: Ambulance, route: "/emergency", group: "Clinical", allowedRoles: ["Super Admin", "Hospital Admin", "Doctor", "Nurse", "Receptionist"], status: "planned" },
   { id: "emr", label: "EMR / EHR", icon: ClipboardList, route: "/emr", group: "Clinical", allowedRoles: ["Super Admin", "Hospital Admin", "Doctor", "Nurse"], status: "planned" },

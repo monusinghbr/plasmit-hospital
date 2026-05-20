@@ -432,3 +432,123 @@ export type FrontOfficeWorkItem = {
   token?: string;
   nextAction: string;
 };
+
+export type ConsultationStatus =
+  | "Not started"
+  | "In progress"
+  | "Draft saved"
+  | "Completed"
+  | "Printed"
+  | "Revised placeholder"
+  | "Addendum placeholder"
+  | "Cancelled visit placeholder";
+
+export type OpdWorklistItem = {
+  id: string;
+  visitId: string;
+  patientId: string;
+  appointmentId: string;
+  tokenNo: string;
+  appointmentTime: string;
+  waitingTime: string;
+  visitType: "New" | "Follow-up" | "Review" | "Emergency" | "Teleconsultation";
+  queueStatus: QueueStatus;
+  vitalsStatus: "Recorded" | "Missing" | "Abnormal" | "Critical";
+  consultationStatus: ConsultationStatus;
+  doctor: string;
+  department: string;
+};
+
+export type ConsultationRecord = {
+  id: string;
+  visitId: string;
+  patientId: string;
+  appointmentId: string;
+  doctor: string;
+  department: string;
+  status: ConsultationStatus;
+  startedAt: string;
+  completedAt?: string;
+  printedAt?: string;
+  chiefComplaint: string;
+  diagnosisIds: string[];
+  prescriptionId: string;
+  followUpDate: string;
+  handoffStatuses: Record<string, "not sent" | "ready" | "sent placeholder" | "failed placeholder">;
+  notes: string;
+};
+
+export type DiagnosisRecord = {
+  id: string;
+  patientId: string;
+  visitId: string;
+  diagnosis: string;
+  icdCode: string;
+  type: "Provisional" | "Final" | "Differential";
+  primary: boolean;
+  severity: "Mild" | "Moderate" | "Severe";
+  status: "Active" | "Resolved" | "Ruled out";
+  notes: string;
+};
+
+export type PrescriptionMedicine = {
+  id: string;
+  prescriptionId: string;
+  medicineName: string;
+  genericName: string;
+  strength: string;
+  form: string;
+  route: string;
+  dose: string;
+  doseUnit: string;
+  frequency: string;
+  timing: string;
+  duration: number;
+  durationUnit: string;
+  quantity: number;
+  instructions: string;
+  alerts: string[];
+};
+
+export type VitalRecord = {
+  id: string;
+  patientId: string;
+  visitId: string;
+  recordedAt: string;
+  recordedBy: string;
+  temperature: string;
+  pulse: string;
+  bloodPressure: string;
+  respiratoryRate: string;
+  spo2: string;
+  height: string;
+  weight: string;
+  bmi: string;
+  painScore: string;
+  status: "Normal" | "Abnormal" | "Critical" | "Missing";
+  source: "Manual" | "Imported placeholder";
+};
+
+export type AllergyRecord = {
+  id: string;
+  patientId: string;
+  allergen: string;
+  type: "Drug" | "Food" | "Environmental" | "Other";
+  reaction: string;
+  severity: "Mild" | "Moderate" | "Severe" | "Critical";
+  status: "Active" | "Inactive";
+  notes: string;
+  updatedAt: string;
+};
+
+export type ClinicalTemplate = {
+  id: string;
+  name: string;
+  type: "Clinical note" | "SOAP note" | "Diagnosis" | "Prescription" | "Procedure advice" | "Follow-up advice" | "Patient instruction";
+  specialty: string;
+  scope: "Doctor" | "Department" | "Global";
+  tags: string[];
+  content: string;
+  status: "Active" | "Inactive";
+  updatedAt: string;
+};
