@@ -296,3 +296,139 @@ export type EmergencyPatient = {
   unknownReason: string;
   status: "Unknown emergency";
 };
+
+export type AppointmentStatus =
+  | "Scheduled"
+  | "Confirmed"
+  | "Checked in"
+  | "Waiting"
+  | "In consultation"
+  | "Completed"
+  | "Rescheduled"
+  | "Cancelled"
+  | "No-show"
+  | "Late"
+  | "Follow-up due";
+
+export type QueueStatus = "Waiting" | "Called" | "In consultation" | "On hold" | "Skipped" | "Completed" | "Cancelled";
+export type TokenStatus = "Issued" | "Called" | "Serving" | "Skipped" | "Held" | "Completed" | "Expired";
+export type OperationalPriority = "Routine" | "Urgent" | "Emergency" | "VIP";
+export type DelayLevel = "Normal" | "Approaching delay" | "Delayed" | "Critical delay";
+
+export type AppointmentRecord = {
+  id: string;
+  appointmentNo: string;
+  patientId: string;
+  department: string;
+  doctor: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  visitType: "New" | "Follow-up" | "Review" | "Emergency";
+  appointmentType: "Regular" | "Walk-in" | "Emergency" | "Teleconsultation";
+  status: AppointmentStatus;
+  priority: OperationalPriority;
+  source: string;
+  reason: string;
+  tokenId?: string;
+  teleconsultation: boolean;
+  room: string;
+  counter: string;
+  checkedInAt?: string;
+  paymentStatus: "Pending" | "Paid" | "Package" | "Not required";
+  createdBy: string;
+  createdAt: string;
+};
+
+export type DoctorSchedule = {
+  id: string;
+  doctor: string;
+  department: string;
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
+  slotDuration: number;
+  room: string;
+  maxPatients: number;
+  status: "Active" | "Blocked" | "Leave" | "Template";
+};
+
+export type AppointmentSlot = {
+  id: string;
+  doctor: string;
+  department: string;
+  date: string;
+  time: string;
+  duration: number;
+  room: string;
+  status: "Available" | "Booked" | "Blocked" | "Overbook allowed" | "Doctor unavailable";
+};
+
+export type QueueEntry = {
+  id: string;
+  appointmentId: string;
+  patientId: string;
+  tokenNo: string;
+  position: number;
+  department: string;
+  doctor: string;
+  status: QueueStatus;
+  waitingSince: string;
+  priority: OperationalPriority;
+  checkedInAt: string;
+  calledAt?: string;
+  delayLevel: DelayLevel;
+  statusReason?: string;
+};
+
+export type TokenRecord = {
+  id: string;
+  tokenNo: string;
+  prefix: string;
+  patientId: string;
+  appointmentId: string;
+  department: string;
+  doctor: string;
+  counter: string;
+  status: TokenStatus;
+  issuedAt: string;
+  calledAt?: string;
+  reprintCount: number;
+  lastReprintReason?: string;
+};
+
+export type FollowUpRecord = {
+  id: string;
+  patientId: string;
+  lastVisitId: string;
+  department: string;
+  doctor: string;
+  dueDate: string;
+  reason: string;
+  status: "Due today" | "Overdue" | "Scheduled" | "Missed" | "Completed";
+  contactAttempts: number;
+};
+
+export type TeleconsultationRecord = {
+  id: string;
+  appointmentId: string;
+  patientId: string;
+  time: string;
+  doctor: string;
+  department: string;
+  consentStatus: "Signed" | "Pending" | "Missing";
+  linkStatus: "Link pending" | "Ready to join" | "Waiting online" | "In call placeholder" | "Completed" | "Failed/no-show";
+  appointmentStatus: AppointmentStatus;
+};
+
+export type FrontOfficeWorkItem = {
+  id: string;
+  time: string;
+  patientId: string;
+  purpose: string;
+  department: string;
+  doctor: string;
+  status: AppointmentStatus | QueueStatus | TokenStatus;
+  token?: string;
+  nextAction: string;
+};
