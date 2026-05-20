@@ -22,6 +22,24 @@ const priorityTone: Record<NotificationItem["priority"], StatusTone> = {
 
 export function NotificationCenter() {
   const [selected, setSelected] = React.useState<NotificationItem | null>(null);
+  const [items, setItems] = React.useState<NotificationItem[]>(notifications);
+  const [query, setQuery] = React.useState("");
+  const [typeFilter, setTypeFilter] = React.useState("");
+  const [priorityFilter, setPriorityFilter] = React.useState("");
+  const [statusFilter, setStatusFilter] = React.useState("");
+  const filteredItems = items.filter((item) => {
+    const haystack = `${item.title} ${item.message} ${item.module} ${item.patient ?? ""}`.toLowerCase();
+    const matchesQuery = !query || haystack.includes(query.toLowerCase());
+    const matchesType = !typeFilter || item.type.toLowerCase().includes(typeFilter.toLowerCase());
+    const matchesPriority = !priorityFilter || item.priority.toLowerCase().includes(priorityFilter.toLowerCase());
+    const matchesStatus = !statusFilter || item.status.toLowerCase().includes(statusFilter.toLowerCase());
+    return matchesQuery && matchesType && matchesPriority && matchesStatus;
+  });
+
+  function updateStatus(id: string, status: NotificationItem["status"]) {
+    setItems((current) => current.map((item) => (item.id === id ? { ...item, status } : item)));
+    setSelected((current) => (current?.id === id ? { ...current, status } : current));
+  }
 
   const columns = React.useMemo<ColumnDef<NotificationItem>[]>(
     () => [
@@ -72,7 +90,7 @@ export function NotificationCenter() {
               <Filter className="h-4 w-4" />
               Filters
             </Button>
-            <Button>
+            <Button onClick={() => setItems((current) => current.map((item) => ({ ...item, status: item.status === "acknowledged" ? item.status : "read" })))}>
               <CheckCheck className="h-4 w-4" />
               Mark read
             </Button>
@@ -83,12 +101,12 @@ export function NotificationCenter() {
       <Card className="mt-4">
         <CardContent className="space-y-4">
           <div className="grid gap-3 md:grid-cols-[1fr_160px_160px_160px]">
-            <Input placeholder="Search title, patient, module..." />
-            <Input placeholder="Type" />
-            <Input placeholder="Priority" />
-            <Input placeholder="Status" />
+            <Input placeholder="Search title, patient, module..." value={query} onChange={(event) => setQuery(event.target.value)} />
+            <Input placeholder="Type" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value)} />
+            <Input placeholder="Priority" value={priorityFilter} onChange={(event) => setPriorityFilter(event.target.value)} />
+            <Input placeholder="Status" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} />
           </div>
-          <DataTable data={notifications} columns={columns} />
+          <DataTable data={filteredItems} columns={columns} />
         </CardContent>
       </Card>
 
@@ -99,8 +117,10 @@ export function NotificationCenter() {
         description={selected ? `${selected.type} • ${selected.module}` : undefined}
         footer={
           <div className="flex justify-end gap-2">
-            <Button variant="outline">Mark read</Button>
-            <Button>Acknowledge</Button>
+            <Button variant="outline" onClick={() => selected && updateStatus(selected.id, "read")}>
+              Mark read
+            </Button>
+            <Button onClick={() => selected && updateStatus(selected.id, "acknowledged")}>Acknowledge</Button>
           </div>
         }
       >

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Command } from "cmdk";
-import { Search, X } from "lucide-react";
+import { Clock3, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -25,26 +25,42 @@ export function CommandSearch({ triggerClassName, compact = false }: { triggerCl
   }, []);
 
   const groups = Array.from(new Set(searchResults.map((result) => result.type)));
+  const recentSearches = searchResults.slice(0, 3);
+  const popularActions = searchResults.filter((result) => result.type === "Action");
 
   return (
     <>
-      <button
-        className={
-          triggerClassName ??
-          "hidden h-9 min-w-64 items-center gap-2 rounded-md border border-border bg-surface px-3 text-left text-sm text-muted-foreground hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:flex"
-        }
-        onClick={() => setOpen(true)}
-        aria-label={compact ? "Open global search" : undefined}
-        type="button"
-      >
-        <Search className="h-4 w-4" />
-        {compact ? null : (
-          <>
+      {triggerClassName ? (
+        <button className={triggerClassName} onClick={() => setOpen(true)} aria-label={compact ? "Open global search" : undefined} type="button">
+          <Search className="h-4 w-4" />
+          {compact ? null : (
+            <>
+              Search patient, module, bill...
+              <span className="ml-auto rounded border border-border px-1.5 py-0.5 text-[10px]">/</span>
+            </>
+          )}
+        </button>
+      ) : (
+        <>
+          <button
+            className="hidden h-9 min-w-64 items-center gap-2 rounded-md border border-border bg-surface px-3 text-left text-sm text-muted-foreground hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:flex"
+            onClick={() => setOpen(true)}
+            type="button"
+          >
+            <Search className="h-4 w-4" />
             Search patient, module, bill...
             <span className="ml-auto rounded border border-border px-1.5 py-0.5 text-[10px]">/</span>
-          </>
-        )}
-      </button>
+          </button>
+          <button
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-muted-foreground hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
+            onClick={() => setOpen(true)}
+            aria-label="Open global search"
+            type="button"
+          >
+            <Search className="h-4 w-4" />
+          </button>
+        </>
+      )}
 
       {open ? (
         <div className="fixed inset-0 z-[90] bg-black/35 p-0 backdrop-blur-sm sm:p-6" role="presentation">
@@ -61,6 +77,50 @@ export function CommandSearch({ triggerClassName, compact = false }: { triggerCl
                   <Command.Empty className="px-4 py-8 text-center text-sm text-muted-foreground">
                     No result found. Try UHID, module name, doctor, invoice, or report number.
                   </Command.Empty>
+                  <Command.Group
+                    className="px-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-muted-foreground"
+                    heading="Recent"
+                  >
+                    {recentSearches.map((result) => (
+                      <Command.Item
+                        className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 outline-none aria-selected:bg-surface-muted"
+                        key={`recent-${result.id}`}
+                        onSelect={() => {
+                          setOpen(false);
+                          router.push(result.route);
+                        }}
+                        value={`recent ${result.title} ${result.description}`}
+                      >
+                        <Clock3 className="h-4 w-4 text-muted-foreground" />
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-sm font-medium text-foreground">{result.title}</div>
+                          <div className="truncate text-xs text-muted-foreground">{result.meta}</div>
+                        </div>
+                      </Command.Item>
+                    ))}
+                  </Command.Group>
+                  <Command.Group
+                    className="px-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-muted-foreground"
+                    heading="Popular actions"
+                  >
+                    {popularActions.map((result) => (
+                      <Command.Item
+                        className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 outline-none aria-selected:bg-surface-muted"
+                        key={`action-${result.id}`}
+                        onSelect={() => {
+                          setOpen(false);
+                          router.push(result.route);
+                        }}
+                        value={`action ${result.title} ${result.description}`}
+                      >
+                        <Search className="h-4 w-4 text-primary" />
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-sm font-medium text-foreground">{result.title}</div>
+                          <div className="truncate text-xs text-muted-foreground">{result.description}</div>
+                        </div>
+                      </Command.Item>
+                    ))}
+                  </Command.Group>
                   {groups.map((group) => (
                     <Command.Group
                       className="px-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-muted-foreground"

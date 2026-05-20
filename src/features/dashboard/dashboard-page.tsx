@@ -25,6 +25,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { StatusPill } from "@/components/ui/status-pill";
 import { StatCard } from "@/components/ui/stat-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { dashboardQuickActions } from "@/data/navigation";
 import { appointmentTimeline, bedOccupancy, dashboardStats, departmentActivity, recentActivity } from "@/data/mock";
 
 const statIcons = [Stethoscope, IdCard, CalendarClock, Users, BedDouble, BedDouble, FlaskConical, Pill, CreditCard, AlertTriangle];
@@ -36,7 +37,17 @@ export function DashboardPage() {
       ? "Clinical queue, patient safety, and pending reviews are emphasized for your role."
       : role === "Management"
         ? "Financial, occupancy, and operational risk signals are emphasized for management."
-        : "Hospital-wide operational control view with static Phase 1 data.";
+      : "Hospital-wide operational control view with static Phase 1 data.";
+  const quickActions =
+    role === "Doctor"
+      ? dashboardQuickActions.filter((action) => ["consult", "sample", "monitor"].includes(action.id))
+      : role === "Nurse"
+        ? dashboardQuickActions.filter((action) => ["admit", "monitor", "sample"].includes(action.id))
+        : role === "Billing Executive"
+          ? dashboardQuickActions.filter((action) => ["bill", "register"].includes(action.id))
+          : role === "Management"
+            ? dashboardQuickActions.filter((action) => ["bill", "monitor", "inventory"].includes(action.id))
+            : dashboardQuickActions;
 
   return (
     <div className="space-y-5">
@@ -77,6 +88,36 @@ export function DashboardPage() {
           </motion.div>
         ))}
       </section>
+
+      <Card>
+        <CardHeader>
+          <div>
+            <CardTitle>Role-Aware Quick Actions</CardTitle>
+            <CardDescription>Actions update with the selected static role and route into future phase workspaces.</CardDescription>
+          </div>
+          <StatusPill tone="success">{role}</StatusPill>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            {quickActions.map((action) => {
+              const Icon = action.icon;
+              return (
+                <Button asChild className="h-auto justify-start p-3" key={action.id} variant="outline">
+                  <Link href={action.route}>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-soft text-primary">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <span className="text-left">
+                      <span className="block text-sm font-semibold">{action.label}</span>
+                      <span className="block text-xs font-normal text-muted-foreground">Open {action.route}</span>
+                    </span>
+                  </Link>
+                </Button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
       <section className="grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.65fr)]">
         <Card>

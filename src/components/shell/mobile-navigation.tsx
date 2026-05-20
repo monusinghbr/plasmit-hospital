@@ -8,6 +8,7 @@ import { Cross, Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useRole } from "@/components/providers/role-provider";
+import { RoleSwitcher } from "@/components/shell/role-switcher";
 import { navigationItems } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 
@@ -42,6 +43,10 @@ export function MobileNavigation() {
                 <X className="h-4 w-4" />
               </Button>
             </Dialog.Close>
+          </div>
+          <div className="border-b border-border p-3">
+            <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-sidebar-foreground/55">Active role</div>
+            <RoleSwitcher className="w-full border-border bg-sidebar text-sidebar-foreground hover:bg-sidebar-active/10" />
           </div>
           <nav className="min-h-0 flex-1 overflow-auto p-2">
             {visibleItems.map((item) => {

@@ -23,8 +23,7 @@ export function TopHeader() {
         <div className="hidden text-xs text-muted-foreground md:block">{hospitalContext.department} • {hospitalContext.shift}</div>
       </div>
       <CommandSearch />
-      <CommandSearch compact triggerClassName="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-muted-foreground hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden" />
-      <RoleSwitcher />
+      <RoleSwitcher className="hidden sm:flex" />
       <NotificationPopover />
       <Button asChild size="icon" variant="outline" aria-label="Open UI settings">
         <Link href="/settings/ui">

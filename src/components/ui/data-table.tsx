@@ -9,6 +9,7 @@ import {
 
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SearchX } from "lucide-react";
 
@@ -77,8 +78,15 @@ export function DataTable<TData>({
         </table>
       </div>
       <div className="flex items-center justify-between border-t border-border px-3 py-2 text-xs text-muted-foreground">
-        <span>{data.length} static records</span>
-        <span>Pagination placeholder</span>
+        <span>{data.length} static records • Page 1 of 1</span>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" disabled>
+            Previous
+          </Button>
+          <Button size="sm" variant="outline" disabled>
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );

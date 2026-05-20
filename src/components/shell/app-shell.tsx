@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { AppFooter } from "@/components/shell/app-footer";
 import { AppSidebar } from "@/components/shell/app-sidebar";
 import { TopHeader } from "@/components/shell/top-header";
 
@@ -15,6 +16,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex min-w-0 flex-1 flex-col">
           <TopHeader />
           <main className="min-w-0 flex-1 px-4 pb-8 md:px-6">{children}</main>
+          <AppFooter />
         </div>
       </div>
     </div>
