@@ -663,3 +663,174 @@ export type AmbulanceRequest = {
   eta: string;
   delayReason?: string;
 };
+
+export type EncounterType =
+  | "OPD"
+  | "IPD"
+  | "Emergency"
+  | "Teleconsultation placeholder"
+  | "Lab placeholder"
+  | "Radiology placeholder"
+  | "Pharmacy placeholder"
+  | "Billing placeholder";
+
+export type ClinicalRecordStatus =
+  | "Draft"
+  | "Completed"
+  | "Signed placeholder"
+  | "Addendum placeholder"
+  | "Revised placeholder"
+  | "Cancelled"
+  | "Archived placeholder"
+  | "Superseded placeholder"
+  | "Legal hold placeholder";
+
+export type ClinicalAttachmentStatus = "Uploaded" | "Verified" | "Pending verification" | "Rejected" | "Expired" | "Archived";
+export type DigitalSignatureStatus = "Not required" | "Pending" | "Signed placeholder" | "Rejected placeholder" | "Expired certificate placeholder";
+export type SensitivityLevel = "Normal" | "Sensitive" | "Restricted" | "Break-glass placeholder" | "Consent-gated placeholder";
+export type RecordVersionState = "Current" | "Previous" | "Addendum" | "Superseded" | "Archived placeholder";
+export type DisclosureStatus = "Draft" | "Consent required" | "Approval pending" | "Approved placeholder" | "Rejected placeholder" | "Shared placeholder";
+
+export type EmrEncounter = {
+  id: string;
+  patientId: string;
+  encounterNo: string;
+  encounterType: EncounterType;
+  department: string;
+  provider: string;
+  startedAt: string;
+  completedAt: string;
+  status: ClinicalRecordStatus;
+  signatureStatus: DigitalSignatureStatus;
+  sensitivity: SensitivityLevel;
+  versionState: RecordVersionState;
+  legalHold: boolean;
+  summary: string;
+  diagnosisSummary: string;
+  prescriptionSummary: string;
+  documentsCount: number;
+  relatedRoute: string;
+};
+
+export type MedicalHistoryItem = {
+  id: string;
+  patientId: string;
+  section: "Past medical" | "Surgical" | "Family" | "Social" | "Medication" | "Allergy" | "Immunization" | "Obstetric/Gynecology placeholder";
+  condition: string;
+  onset: string;
+  status: "Active" | "Resolved" | "Verified" | "Unverified" | "Archived placeholder";
+  severity: "Low" | "Medium" | "High" | "Critical";
+  notes: string;
+  sourceEncounter: string;
+  verified: boolean;
+  sensitivity: SensitivityLevel;
+};
+
+export type ProgressNote = {
+  id: string;
+  patientId: string;
+  encounterId: string;
+  noteType: "OPD note" | "IPD progress note" | "Emergency note" | "Nursing note" | "Doctor round note" | "Addendum" | "Referral note placeholder";
+  author: string;
+  department: string;
+  createdAt: string;
+  status: ClinicalRecordStatus;
+  signatureStatus: DigitalSignatureStatus;
+  internalOnly: boolean;
+  summary: string;
+  fullNote: string;
+  addendumHistory: string;
+  version: string;
+};
+
+export type ClinicalAttachment = {
+  id: string;
+  patientId: string;
+  encounterId: string;
+  name: string;
+  category: string;
+  uploadedBy: string;
+  uploadedAt: string;
+  verificationStatus: ClinicalAttachmentStatus;
+  signatureStatus: DigitalSignatureStatus;
+  sensitivity: SensitivityLevel;
+  previewAvailable: boolean;
+  retentionStatus: string;
+  legalHold: boolean;
+};
+
+export type DigitalSignatureRecord = {
+  id: string;
+  documentId: string;
+  documentName: string;
+  patientId: string;
+  encounterId: string;
+  requestedBy: string;
+  signer: string;
+  requestedAt: string;
+  status: DigitalSignatureStatus;
+  certificateStatus: "Valid placeholder" | "Expired placeholder" | "Not required" | "Pending enrollment placeholder";
+  reason: string;
+};
+
+export type ClinicalTimelineEvent = {
+  id: string;
+  patientId: string;
+  encounterId?: string;
+  eventType: string;
+  title: string;
+  summary: string;
+  occurredAt: string;
+  department: string;
+  provider: string;
+  status: ClinicalRecordStatus | ClinicalAttachmentStatus | DigitalSignatureStatus | string;
+  sensitivity: SensitivityLevel;
+  versionContext: string;
+  category: "Clinical" | "Operational" | "Governance";
+};
+
+export type RecordAccessAudit = {
+  id: string;
+  patientId: string;
+  recordId: string;
+  recordType: string;
+  user: string;
+  role: Role;
+  action: string;
+  reason: string;
+  sensitivity: SensitivityLevel;
+  ipAddress: string;
+  device: string;
+  timestamp: string;
+  outcome: "Allowed" | "Denied placeholder" | "Reason required placeholder" | "Masked";
+};
+
+export type RecordVersion = {
+  id: string;
+  patientId: string;
+  recordId: string;
+  recordName: string;
+  recordType: string;
+  encounterId: string;
+  version: string;
+  state: RecordVersionState;
+  author: string;
+  updatedAt: string;
+  reason: string;
+  currentVersionId: string;
+  legalHold: boolean;
+};
+
+export type DisclosureRequest = {
+  id: string;
+  requestNo: string;
+  patientId: string;
+  recipient: string;
+  purpose: string;
+  recordScope: string;
+  consentStatus: "Available" | "Consent required" | "Withdrawn placeholder" | "Not applicable";
+  approvalStatus: DisclosureStatus;
+  requestedBy: string;
+  requestedAt: string;
+  reason: string;
+};
