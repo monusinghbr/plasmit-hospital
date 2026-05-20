@@ -834,3 +834,251 @@ export type DisclosureRequest = {
   requestedAt: string;
   reason: string;
 };
+
+export type LabOrderStatus =
+  | "Ordered"
+  | "Sample pending"
+  | "Sample collected"
+  | "In processing"
+  | "Result pending"
+  | "Result entered"
+  | "Approval pending"
+  | "Approved"
+  | "Rejected"
+  | "Report printed"
+  | "Cancelled";
+
+export type SampleStatus =
+  | "Pending collection"
+  | "Collected"
+  | "Recollected"
+  | "Rejected"
+  | "In transit"
+  | "Received"
+  | "Processing"
+  | "Stored"
+  | "Disposed placeholder"
+  | "Lost/damaged placeholder"
+  | "Quantity not sufficient placeholder"
+  | "Hemolyzed/clotted placeholder";
+
+export type DiagnosticResultStatus =
+  | "Not entered"
+  | "Draft"
+  | "Abnormal"
+  | "Critical"
+  | "Approval pending"
+  | "Approved"
+  | "Correction requested"
+  | "Corrected placeholder"
+  | "Addendum placeholder"
+  | "Superseded placeholder";
+
+export type DiagnosticPriority = "Routine" | "Urgent" | "Emergency" | "Critical" | "STAT placeholder";
+export type LabDepartment = "Biochemistry" | "Hematology" | "Microbiology" | "Histopathology";
+
+export type LabOrder = {
+  id: string;
+  orderNo: string;
+  patientId: string;
+  encounterId: string;
+  source: "OPD" | "IPD" | "Emergency" | "External placeholder";
+  tests: string[];
+  department: LabDepartment;
+  priority: DiagnosticPriority;
+  status: LabOrderStatus;
+  sampleStatus: SampleStatus;
+  resultStatus: DiagnosticResultStatus;
+  orderedBy: string;
+  orderedAt: string;
+  billingStatus: string;
+};
+
+export type LabTest = {
+  id: string;
+  name: string;
+  code: string;
+  department: LabDepartment;
+  sampleType: string;
+  method: string;
+  normalRangeStatus: "Configured" | "Age/gender split" | "Missing range" | "Critical range configured";
+  price: string;
+  status: "Active" | "Inactive" | "Review required";
+  parameters: Array<{
+    name: string;
+    unit: string;
+    referenceRange: string;
+    criticalLow: string;
+    criticalHigh: string;
+  }>;
+};
+
+export type LabPackage = {
+  id: string;
+  name: string;
+  code: string;
+  includedTests: string[];
+  department: "Multi department" | LabDepartment;
+  price: string;
+  status: "Active" | "Inactive" | "Sample conflict placeholder";
+  sampleRequirements: string;
+};
+
+export type SampleCollection = {
+  id: string;
+  orderId: string;
+  barcode: string;
+  sampleType: string;
+  container: string;
+  status: SampleStatus;
+  collectedBy: string;
+  collectedAt: string;
+  rejectionReason: string;
+  qualityIssue: string;
+  custodyStatus: string;
+  reprintCount: number;
+  lastReprintReason: string;
+};
+
+export type AnalyzerDevice = {
+  id: string;
+  name: string;
+  department: LabDepartment;
+  connectionStatus: "Online placeholder" | "Offline" | "Sync failed placeholder" | "Maintenance";
+  lastSync: string;
+  pendingResults: number;
+  errorCount: number;
+  status: "Active" | "Disabled placeholder" | "Review";
+};
+
+export type LabResult = {
+  id: string;
+  orderId: string;
+  testId: string;
+  parameters: Array<{
+    parameter: string;
+    value: string;
+    unit: string;
+    referenceRange: string;
+    flag: "Normal" | "Low" | "High" | "Critical low" | "Critical high" | "Abnormal";
+    previousValue: string;
+    comment: string;
+  }>;
+  status: DiagnosticResultStatus;
+  critical: boolean;
+  enteredBy: string;
+  approvedBy: string;
+  approvedAt: string;
+  version: string;
+  correctionReason: string;
+  addendum: string;
+};
+
+export type CriticalLabAlert = {
+  id: string;
+  orderId: string;
+  patientId: string;
+  test: string;
+  parameter: string;
+  value: string;
+  escalation: "Unacknowledged" | "Acknowledged placeholder" | "Escalated" | "Closed placeholder";
+  assignedTo: string;
+  createdAt: string;
+  acknowledgedAt: string;
+};
+
+export type SampleCustodyEvent = {
+  id: string;
+  sampleId: string;
+  orderId: string;
+  eventType: string;
+  location: string;
+  user: string;
+  timestamp: string;
+  notes: string;
+};
+
+export type RadiologyOrderStatus =
+  | "Ordered"
+  | "Scheduled"
+  | "Patient arrived"
+  | "In progress"
+  | "Image acquired placeholder"
+  | "Reporting pending"
+  | "Report draft"
+  | "Approval pending"
+  | "Approved"
+  | "Report printed"
+  | "Cancelled";
+
+export type PacsStatus = "Study pending" | "Image unavailable" | "Image available placeholder" | "PACS sync pending" | "PACS synced placeholder" | "Sync failed placeholder";
+export type RadiologyModality = "Ultrasound" | "CT" | "MRI" | "X-Ray" | "Mammography" | "PET";
+export type RadiologyPrepStatus = "Not required" | "Pending" | "Completed" | "Failed/prep incomplete" | "Consent pending" | "Safety checklist pending";
+
+export type RadiologyOrder = {
+  id: string;
+  orderNo: string;
+  patientId: string;
+  encounterId: string;
+  source: "OPD" | "IPD" | "Emergency" | "External placeholder";
+  modality: RadiologyModality;
+  study: string;
+  priority: DiagnosticPriority;
+  scheduleStatus: RadiologyOrderStatus;
+  pacsStatus: PacsStatus;
+  reportStatus: DiagnosticResultStatus | "Report draft" | "Report printed";
+  safetyChecklistStatus: RadiologyPrepStatus;
+  orderedBy: string;
+  orderedAt: string;
+};
+
+export type RadiologySchedule = {
+  id: string;
+  orderId: string;
+  dateTime: string;
+  room: string;
+  technician: string;
+  preparation: RadiologyPrepStatus;
+  contrastRequired: "Yes" | "No" | "Conditional placeholder";
+  consentRequired: "Yes" | "No" | "Pending";
+  safetyChecklist: RadiologyPrepStatus;
+};
+
+export type PacsStudy = {
+  id: string;
+  studyUid: string;
+  orderId: string;
+  patientId: string;
+  modality: RadiologyModality;
+  study: string;
+  studyDate: string;
+  imageStatus: PacsStatus;
+  syncStatus: PacsStatus;
+  reportStatus: DiagnosticResultStatus | "Report draft" | "Report printed";
+};
+
+export type RadiologyReport = {
+  id: string;
+  orderId: string;
+  studyId: string;
+  radiologist: string;
+  status: DiagnosticResultStatus | "Report draft" | "Report printed";
+  findings: string;
+  impression: string;
+  criticalFinding: boolean;
+  approvedAt: string;
+  addendum: string;
+  version: string;
+  correctionReason: string;
+  supersededBy: string;
+};
+
+export type RadiologySafetyChecklist = {
+  id: string;
+  orderId: string;
+  modality: RadiologyModality;
+  items: Array<{ label: string; status: "Done" | "Pending" | "Blocked placeholder" }>;
+  status: RadiologyPrepStatus;
+  completedBy: string;
+  completedAt: string;
+};
