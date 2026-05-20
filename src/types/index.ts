@@ -1293,3 +1293,305 @@ export type OtRoomCleaning = {
   infectionRisk: string;
   releaseStatus: "Ready" | "Override required" | "Blocked" | "Pending";
 };
+
+export type BillStatus = "Draft" | "Pending" | "Ready to bill" | "Finalized" | "Partially paid" | "Paid" | "Overdue" | "Cancelled" | "Revised" | "Write-off requested placeholder";
+export type InvoiceStatus = "Draft" | "Issued" | "Printed" | "Partially paid" | "Paid" | "Cancelled" | "Revised" | "Credit note placeholder";
+export type PaymentStatus = "Pending" | "Received" | "Split payment" | "Failed placeholder" | "Reversed placeholder" | "Refunded";
+export type RefundStatus = "Requested" | "Under review" | "Approved" | "Rejected" | "Paid" | "Cancelled";
+export type DiscountStatus = "Requested" | "Approved" | "Rejected" | "Expired" | "Applied";
+export type AdvanceStatus = "Available" | "Partially adjusted" | "Fully adjusted" | "Refunded" | "On hold";
+export type CreditStatus = "Open" | "Partially settled" | "Settled" | "Overdue" | "Disputed" | "Write-off requested placeholder";
+export type PackageBillingStatus = "Assigned" | "Active" | "Utilized" | "Partially utilized" | "Over limit" | "Exclusion pending" | "Closed";
+export type InsuranceTpaStatus =
+  | "Eligible"
+  | "Eligibility pending"
+  | "Preauthorization required"
+  | "Preauthorization submitted"
+  | "Preauthorization approved"
+  | "Preauthorization rejected"
+  | "Claim draft"
+  | "Claim submitted"
+  | "Under review"
+  | "Query raised"
+  | "Rejected"
+  | "Resubmitted"
+  | "Settled"
+  | "Short settled";
+export type FinanceStatus = "Draft" | "Posted placeholder" | "Pending approval" | "Approved" | "Rejected" | "Matched" | "Unmatched" | "Reconciled placeholder";
+
+export type BillingRecord = {
+  id: string;
+  billNo: string;
+  patientId: string;
+  visitId: string;
+  admissionId: string;
+  source: "OPD" | "IPD" | "Emergency" | "Lab" | "Radiology" | "Pharmacy" | "OT" | "Package" | "Manual placeholder";
+  department: string;
+  payerType: "Self" | "Insurance" | "TPA" | "Corporate credit" | "Package";
+  grossAmount: number;
+  discountAmount: number;
+  taxAmount: number;
+  netAmount: number;
+  paidAmount: number;
+  dueAmount: number;
+  status: BillStatus;
+  createdAt: string;
+};
+
+export type BillLine = {
+  id: string;
+  billId: string;
+  serviceCode: string;
+  serviceName: string;
+  source: BillingRecord["source"];
+  tariffId: string;
+  department: string;
+  doctor: string;
+  quantity: number;
+  rate: number;
+  discountAmount: number;
+  taxAmount: number;
+  amount: number;
+  status: "Billable" | "Non-payable" | "Package included" | "Approval required" | "Cancelled";
+};
+
+export type BillingTariff = {
+  id: string;
+  serviceCode: string;
+  serviceName: string;
+  department: string;
+  category: string;
+  baseRate: number;
+  payerRate: number;
+  taxRule: string;
+  effectiveFrom: string;
+  effectiveTo: string;
+  overrideApprovalRequired: boolean;
+  status: "Active" | "Inactive" | "Future effective" | "Expired";
+};
+
+export type InvoiceRecord = {
+  id: string;
+  invoiceNo: string;
+  billId: string;
+  patientId: string;
+  payerId: string;
+  invoiceDate: string;
+  grossAmount: number;
+  discountAmount: number;
+  taxAmount: number;
+  netAmount: number;
+  status: InvoiceStatus;
+};
+
+export type PaymentRecord = {
+  id: string;
+  receiptNo: string;
+  invoiceId: string;
+  patientId: string;
+  paymentMode: "Cash" | "Card placeholder" | "UPI placeholder" | "Bank transfer placeholder" | "Cheque placeholder" | "Advance adjustment";
+  amount: number;
+  status: PaymentStatus;
+  collectedBy: string;
+  collectedAt: string;
+};
+
+export type ReceiptRecord = {
+  id: string;
+  receiptNo: string;
+  paymentId: string;
+  invoiceId: string;
+  patientId: string;
+  amount: number;
+  printStatus: "Ready to print" | "Printed" | "Reprint requires audit" | "Cancelled placeholder";
+  deliveryMode: "Counter print" | "Email placeholder" | "WhatsApp placeholder" | "Patient portal placeholder";
+  status: PaymentStatus;
+  issuedBy: string;
+  issuedAt: string;
+};
+
+export type RefundRecord = {
+  id: string;
+  refundNo: string;
+  paymentId: string;
+  invoiceId: string;
+  patientId: string;
+  requestedAmount: number;
+  eligibleAmount: number;
+  reason: string;
+  status: RefundStatus;
+  approvedBy: string;
+};
+
+export type DiscountRequest = {
+  id: string;
+  requestNo: string;
+  billId: string;
+  patientId: string;
+  requestedAmount: number;
+  reason: string;
+  approver: string;
+  status: DiscountStatus;
+};
+
+export type AdvanceRecord = {
+  id: string;
+  advanceNo: string;
+  patientId: string;
+  source: "IPD deposit" | "OPD advance" | "Package deposit" | "Corporate deposit placeholder";
+  amount: number;
+  adjustedAmount: number;
+  balanceAmount: number;
+  status: AdvanceStatus;
+};
+
+export type CreditBill = {
+  id: string;
+  creditNo: string;
+  patientId: string;
+  company: string;
+  invoiceId: string;
+  outstandingAmount: number;
+  agingDays: number;
+  status: CreditStatus;
+};
+
+export type BillingPackage = {
+  id: string;
+  packageNo: string;
+  patientId: string;
+  admissionId: string;
+  packageName: string;
+  limitAmount: number;
+  utilizedAmount: number;
+  overageAmount: number;
+  status: PackageBillingStatus;
+};
+
+export type FinanceLedgerEntry = {
+  id: string;
+  ledgerNo: string;
+  ledgerType: "Patient" | "Payer" | "Vendor" | "Company" | "Cash counter";
+  party: string;
+  debit: number;
+  credit: number;
+  balance: number;
+  status: FinanceStatus;
+  postedAt: string;
+};
+
+export type ExpenseRecord = {
+  id: string;
+  expenseNo: string;
+  category: string;
+  vendorId: string;
+  amount: number;
+  approvalStatus: FinanceStatus;
+  paymentStatus: PaymentStatus;
+  requestedAt: string;
+};
+
+export type CashCounterRecord = {
+  id: string;
+  counterNo: string;
+  cashier: string;
+  openedAt: string;
+  closedAt: string;
+  openingBalance: number;
+  cashCollected: number;
+  refundPaid: number;
+  handoverAmount: number;
+  variance: number;
+  status: "Open" | "Closed" | "Variance" | "Handover pending";
+};
+
+export type BankEntry = {
+  id: string;
+  bankRef: string;
+  paymentId: string;
+  amount: number;
+  bankDate: string;
+  matchStatus: FinanceStatus;
+  notes: string;
+};
+
+export type InsuranceCompany = {
+  id: string;
+  name: string;
+  code: string;
+  contractStatus: "Active" | "Expiring" | "Inactive" | "Blocked placeholder";
+  tariff: string;
+  contact: string;
+};
+
+export type TpaRecord = {
+  id: string;
+  name: string;
+  code: string;
+  linkedInsurers: string[];
+  contractStatus: "Active" | "Expiring" | "Inactive" | "Blocked placeholder";
+  contact: string;
+};
+
+export type PatientPolicy = {
+  id: string;
+  patientId: string;
+  insuranceCompanyId: string;
+  tpaId: string;
+  policyNo: string;
+  policyHolder: string;
+  validFrom: string;
+  validTo: string;
+  coverageLimit: number;
+  coPayPercent: number;
+  documentStatus: "Verified" | "Pending" | "Rejected" | "Expired";
+  status: InsuranceTpaStatus;
+};
+
+export type PreauthorizationRecord = {
+  id: string;
+  preauthNo: string;
+  patientId: string;
+  admissionId: string;
+  policyId: string;
+  requestedAmount: number;
+  approvedAmount: number;
+  queryStatus: "No query" | "Query raised" | "Responded placeholder";
+  documentStatus: "Complete" | "Missing" | "Pending review" | "Rejected";
+  status: InsuranceTpaStatus;
+};
+
+export type ClaimRecord = {
+  id: string;
+  claimNo: string;
+  patientId: string;
+  invoiceId: string;
+  preauthId: string;
+  payerId: string;
+  claimAmount: number;
+  submittedAmount: number;
+  approvedAmount: number;
+  status: InsuranceTpaStatus;
+  agingDays: number;
+};
+
+export type ClaimSettlement = {
+  id: string;
+  settlementNo: string;
+  claimId: string;
+  approvedAmount: number;
+  receivedAmount: number;
+  deductionAmount: number;
+  shortfallAmount: number;
+  reason: string;
+  status: InsuranceTpaStatus;
+};
+
+export type ClaimRejection = {
+  id: string;
+  claimId: string;
+  rejectionReason: string;
+  correctionChecklist: string[];
+  resubmissionStatus: InsuranceTpaStatus;
+  closedAt: string;
+};
