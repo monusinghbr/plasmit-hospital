@@ -29,6 +29,7 @@ import {
   Store,
   Syringe,
   Users,
+  UserCog,
   Workflow,
 } from "lucide-react";
 
@@ -54,6 +55,14 @@ export const navigationItems: NavigationItem[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, route: "/dashboard", group: "Command", allowedRoles: allRoles, status: "ready" },
   { id: "search", label: "Global Search", icon: Search, route: "/search", group: "Command", allowedRoles: allRoles, status: "ready" },
   { id: "notifications", label: "Notifications", icon: Bell, route: "/notifications", group: "Command", allowedRoles: allRoles, status: "ready" },
+  { id: "admin-roles", label: "Roles", icon: ShieldCheck, route: "/admin/roles", group: "Admin Setup", allowedRoles: ["Super Admin", "Hospital Admin"], status: "ready" },
+  { id: "admin-permissions", label: "Permissions", icon: LockKeyhole, route: "/admin/permissions", group: "Admin Setup", allowedRoles: ["Super Admin", "Hospital Admin"], status: "ready" },
+  { id: "admin-users", label: "Users", icon: UserCog, route: "/admin/users", group: "Admin Setup", allowedRoles: ["Super Admin", "Hospital Admin", "HR Manager"], status: "ready" },
+  { id: "admin-departments", label: "Departments", icon: Building2, route: "/admin/departments", group: "Admin Setup", allowedRoles: ["Super Admin", "Hospital Admin"], status: "ready" },
+  { id: "admin-hospital", label: "Hospital Setup", icon: Settings, route: "/admin/hospital-setup", group: "Admin Setup", allowedRoles: ["Super Admin", "Hospital Admin", "Management"], status: "ready" },
+  { id: "admin-branches", label: "Branches", icon: Store, route: "/admin/branches", group: "Admin Setup", allowedRoles: ["Super Admin", "Hospital Admin"], status: "ready" },
+  { id: "admin-security", label: "Security", icon: ShieldCheck, route: "/admin/security", group: "Admin Setup", allowedRoles: ["Super Admin", "Hospital Admin"], status: "ready" },
+  { id: "admin-audit", label: "Audit Logs", icon: Archive, route: "/admin/audit-logs", group: "Admin Setup", allowedRoles: ["Super Admin", "Hospital Admin", "Management"], status: "ready" },
   { id: "front-office", label: "Front Office", icon: Home, route: "/front-office", group: "Operations", allowedRoles: ["Super Admin", "Hospital Admin", "Receptionist"], status: "planned" },
   { id: "patients", label: "Patient", icon: IdCard, route: "/patients", group: "Clinical", allowedRoles: allRoles, status: "planned" },
   { id: "appointments", label: "Appointment", icon: CalendarClock, route: "/appointments", group: "Clinical", allowedRoles: allRoles, status: "planned" },
