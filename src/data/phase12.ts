@@ -19,6 +19,19 @@ export const mockWebhookEvents: Phase12Record[] = [
   { id: "wh-003", endpoint: "lab.result.critical", eventType: "Critical alert", deliveryStatus: "Retrying", retryCount: 2, failedReason: "HTTP 503 placeholder", maskedPayload: "{ order: LAB**** }", status: "Retrying" },
 ];
 
+export const mockPaymentGatewaySync: Phase12Record[] = [
+  { id: "pay-001", gateway: "Razorpay placeholder", transactionNo: "PG-****-9081", invoice: "OPD-INV-24881", amount: "INR 2,450", transactionStatus: "Captured placeholder", reconciliationStatus: "Matched", failedReason: "None", lastSync: "Today 11:12", environment: "Sandbox", status: "Synced" },
+  { id: "pay-002", gateway: "HDFC SmartHub placeholder", transactionNo: "PG-****-2210", invoice: "IPD-ADV-11904", amount: "INR 25,000", transactionStatus: "Bank timeout", reconciliationStatus: "Pending review", failedReason: "Settlement callback missing", lastSync: "Today 10:35", environment: "Staging", status: "Failed" },
+  { id: "pay-003", gateway: "UPI Collect placeholder", transactionNo: "UPI-****-7742", invoice: "PHR-INV-31018", amount: "INR 980", transactionStatus: "Refund queued", reconciliationStatus: "Manual approval", failedReason: "Refund approval placeholder", lastSync: "Today 09:48", environment: "Sandbox", status: "Review pending" },
+];
+
+export const mockMessageProviderSync: Phase12Record[] = [
+  { id: "msg-001", channel: "SMS", provider: "Gupshup placeholder", templateSync: "Appointment reminder approved", deliveryLog: "1,284 delivered today", consentRule: "Transactional allowed", dndRule: "DND bypass disabled", failedReason: "None", retryQueue: 0, status: "Active" },
+  { id: "msg-002", channel: "SMS", provider: "Textlocal placeholder", templateSync: "OTP fallback pending", deliveryLog: "42 failed", consentRule: "OTP only", dndRule: "Respect DND", failedReason: "DLT template mismatch", retryQueue: 42, status: "Failed" },
+  { id: "msg-003", channel: "WhatsApp", provider: "Meta Cloud API placeholder", templateSync: "Discharge follow-up approved", deliveryLog: "438 delivered today", consentRule: "Opt-in required", dndRule: "Consent gate active", failedReason: "None", retryQueue: 0, status: "Active" },
+  { id: "msg-004", channel: "WhatsApp", provider: "Interakt placeholder", templateSync: "Lab report template review", deliveryLog: "18 failed", consentRule: "Marketing disabled", dndRule: "Emergency only", failedReason: "Patient consent withdrawn", retryQueue: 18, status: "Restricted" },
+];
+
 export const mockInteropMappings: Phase12Record[] = [
   { id: "map-001", interface: "HL7 ADT", messageOrResource: "ADT^A01", direction: "Inbound", mapping: "Patient/admission", lastMessage: "Today 10:12", errorState: "None", status: "Synced" },
   { id: "map-002", interface: "HL7 ORU", messageOrResource: "ORU^R01", direction: "Inbound", mapping: "Lab result", lastMessage: "Today 10:52", errorState: "OBX segment mismatch", status: "Failed" },
@@ -61,16 +74,34 @@ export const mockDevices: Phase12Record[] = [
   { id: "dev-002", device: "Unknown Android", owner: "Unclaimed", deviceId: "and-****-91", trust: "Untrusted", lastSeen: "Today 07:50", risk: "Risk flagged", status: "Blocked" },
 ];
 
+export const mockIpRules: Phase12Record[] = [
+  { id: "ipr-001", ruleName: "Main campus allowlist", ipRange: "10.0.0.0/16", action: "Allow", attempts: 1824, owner: "IT", lastAttempt: "Now", reason: "Hospital network", status: "Active" },
+  { id: "ipr-002", ruleName: "Unknown overseas block", ipRange: "203.0.113.42", action: "Block", attempts: 9, owner: "Security", lastAttempt: "Today 08:12", reason: "Failed privileged login attempts", status: "Blocked" },
+  { id: "ipr-003", ruleName: "Vendor VPN temporary access", ipRange: "198.51.100.18", action: "Time boxed allow", attempts: 14, owner: "Hospital Admin", lastAttempt: "Yesterday", reason: "ERP support window expires tonight", status: "Review pending" },
+];
+
 export const mockBackups: Phase12Record[] = [
   { id: "bkp-001", backupSet: "Daily app data snapshot", schedule: "Daily 02:00", storage: "Encrypted placeholder", lastRun: "Today 02:04", restoreState: "Not requested", rpo: "24h", status: "Completed" },
   { id: "bkp-002", backupSet: "Document archive", schedule: "Hourly", storage: "Warm storage placeholder", lastRun: "Failed at 10:00", restoreState: "Not requested", rpo: "1h", status: "Failed" },
   { id: "bkp-003", backupSet: "DR drill", schedule: "Monthly", storage: "DR site placeholder", lastRun: "15 May 2026", restoreState: "Restore requested placeholder", rpo: "4h", status: "Drill pending" },
 ];
 
+export const mockDisasterRecovery: Phase12Record[] = [
+  { id: "dr-001", drillName: "Monthly restore drill", recoveryArea: "App data snapshot", rpo: "4h placeholder", rto: "2h placeholder", lastDrill: "15 May 2026", gap: "Restore evidence upload pending", signOff: "IT Manager", status: "Drill pending" },
+  { id: "dr-002", drillName: "Document archive failover", recoveryArea: "Patient documents", rpo: "24h placeholder", rto: "6h placeholder", lastDrill: "10 May 2026", gap: "No blocker", signOff: "Compliance", status: "Drill completed" },
+  { id: "dr-003", drillName: "Critical billing continuity", recoveryArea: "Cash counter and invoices", rpo: "1h placeholder", rto: "90m placeholder", lastDrill: "Scheduled tomorrow", gap: "Manual receipt runbook review", signOff: "Finance", status: "Review pending" },
+];
+
 export const mockConsents: Phase12Record[] = [
   { id: "con-001", patient: "Meera J. / PLH-220908", consentType: "ABHA linking", source: "Patient registration", expiry: "20 May 2027", restriction: "None", status: "Active" },
   { id: "con-002", patient: "Sana K. / PLH-210076", consentType: "WhatsApp communication", source: "Mobile app", expiry: "Withdrawn today", restriction: "Block non-emergency", status: "Withdrawn" },
   { id: "con-003", patient: "Ravi K. / PLH-221114", consentType: "Remote monitoring", source: "IPD discharge", expiry: "In 6 days", restriction: "Renewal needed", status: "Expiring soon" },
+];
+
+export const mockEncryptionCoverage: Phase12Record[] = [
+  { id: "enc-001", dataCategory: "Patient demographics", encryptionState: "Encrypted at rest", keyAlias: "hms-patient-key-****", rotationDue: "18 days", coverage: "100%", gap: "None", secretsExposure: "Masked", status: "Active" },
+  { id: "enc-002", dataCategory: "Clinical attachments", encryptionState: "Encrypted placeholder", keyAlias: "hms-doc-key-****", rotationDue: "Today", coverage: "96%", gap: "Legacy scan bucket review", secretsExposure: "Masked", status: "Review pending" },
+  { id: "enc-003", dataCategory: "Integration credentials", encryptionState: "Vault placeholder", keyAlias: "hms-int-key-****", rotationDue: "Expired", coverage: "Partial", gap: "ERP credential rotation required", secretsExposure: "Never displayed", status: "Risk flagged" },
 ];
 
 export const mockCompliance: Phase12Record[] = [
@@ -90,6 +121,17 @@ export const mockMobileViews: Phase12Record[] = [
   { id: "mob-002", roleView: "Nurse", primaryTasks: "Vitals, MAR, nursing notes", offlineState: "Available", pushPermission: "Allowed", restrictedActions: 1, status: "Available" },
   { id: "mob-003", roleView: "Patient", primaryTasks: "Appointments, reports, bills, profile", offlineState: "Restricted own data", pushPermission: "Blocked", restrictedActions: 4, status: "Restricted" },
   { id: "mob-004", roleView: "Management", primaryTasks: "Revenue, occupancy, alerts", offlineState: "Read-only", pushPermission: "Allowed", restrictedActions: 3, status: "Available" },
+];
+
+export const mockMobileRoleTasks: Phase12Record[] = [
+  { id: "mrt-001", roleView: "Doctor", section: "OPD queue", task: "Review waiting patients", context: "12 assigned, 2 critical flags", permission: "Write notes, approve prescription", offlineConflict: "Draft note sync pending", pushPermission: "Allowed", status: "Pending sync placeholder" },
+  { id: "mrt-002", roleView: "Doctor", section: "Rounds", task: "Approve IPD round summary", context: "ICU bed 4 escalation", permission: "Doctor approval required", offlineConflict: "No conflict", pushPermission: "Allowed", status: "Needs review" },
+  { id: "mrt-003", roleView: "Nurse", section: "Task list", task: "Record vitals and MAR", context: "Ward B, 18 due tasks", permission: "Nursing station write", offlineConflict: "2 vitals awaiting sync", pushPermission: "Allowed", status: "Review pending" },
+  { id: "mrt-004", roleView: "Nurse", section: "Escalation", task: "Acknowledge threshold alert", context: "Remote SpO2 low", permission: "Escalate to doctor", offlineConflict: "Online required", pushPermission: "Allowed", status: "Escalated" },
+  { id: "mrt-005", roleView: "Patient", section: "Appointments", task: "View booking and teleconsult", context: "Follow-up tomorrow", permission: "Own data only", offlineConflict: "Read-only cache", pushPermission: "Blocked", status: "Restricted" },
+  { id: "mrt-006", roleView: "Patient", section: "Reports and bills", task: "View masked reports and dues", context: "2 reports, INR 1,250 due", permission: "Payment placeholder", offlineConflict: "Download disabled offline", pushPermission: "Blocked", status: "Available" },
+  { id: "mrt-007", roleView: "Management", section: "Executive dashboard", task: "Review revenue and occupancy", context: "OPD/IPD/claims summary", permission: "Read-only drill-down", offlineConflict: "Cached snapshot", pushPermission: "Allowed", status: "Available" },
+  { id: "mrt-008", roleView: "Management", section: "Alerts", task: "Acknowledge operational blocker", context: "TPA claim aging and bed wait", permission: "Sign-off placeholder", offlineConflict: "Online approval required", pushPermission: "Allowed", status: "Action pending" },
 ];
 
 export const mockRemoteMonitoring: Phase12Record[] = [
@@ -112,4 +154,40 @@ export const mockQaChecks: Phase12Record[] = [
   { id: "qa-003", area: "Performance QA", coverage: "Tables, drawers, skeletons, bundle placeholder", finding: "Large table virtualization future ticket", owner: "Frontend", due: "Waiver review", residualRisk: "Medium", status: "Waived placeholder" },
   { id: "qa-004", area: "Print/export QA", coverage: "Masking, print-safe layouts", finding: "Export backend pending", owner: "Product", due: "Future phase", residualRisk: "Known placeholder", status: "Passed" },
   { id: "qa-005", area: "Release readiness", coverage: "Blockers, sign-off, route coverage", finding: "Final sign-off pending", owner: "Hospital Admin", due: "Release gate", residualRisk: "Pending", status: "Blocked" },
+];
+
+export const mockQaResponsive: Phase12Record[] = [
+  { id: "qar-001", deviceClass: "Phone", breakpoint: "320-430px", check: "Single-column cards, full-screen drawer, sticky actions", finding: "No page-level horizontal scroll", owner: "Frontend", residualRisk: "Low", status: "Passed" },
+  { id: "qar-002", deviceClass: "Tablet", breakpoint: "768-1024px portrait", check: "Two-column panels and compact tables", finding: "Dense tables scroll inside container", owner: "Frontend", residualRisk: "Low", status: "Passed" },
+  { id: "qar-003", deviceClass: "Wide desktop", breakpoint: "1440-1920px", check: "Dashboard grids, drawer width, context panels", finding: "No sticky overlap detected", owner: "QA", residualRisk: "Low", status: "Passed" },
+];
+
+export const mockQaAccessibility: Phase12Record[] = [
+  { id: "qaa-001", area: "Keyboard", check: "Filters, drawer, action bar, table buttons", finding: "Focusable controls visible", owner: "QA", residualRisk: "Manual screen-reader pass pending", status: "In progress" },
+  { id: "qaa-002", area: "Contrast", check: "Status tokens in light/dark/dynamic theme", finding: "Critical, danger, warning, success readable", owner: "Design", residualRisk: "Low", status: "Passed" },
+  { id: "qaa-003", area: "Labels", check: "Inputs, selects, buttons, icon actions", finding: "Visible labels or accessible text present", owner: "Frontend", residualRisk: "Low", status: "Passed" },
+];
+
+export const mockQaPerformance: Phase12Record[] = [
+  { id: "qap-001", surface: "Large tables", check: "Contained overflow, sticky table header, pagination placeholder", finding: "Stable table dimensions", owner: "Frontend", residualRisk: "Virtualization future ticket", status: "Waived placeholder" },
+  { id: "qap-002", surface: "Drawers", check: "Lazy detail content and print preview", finding: "Drawer opens without layout shift", owner: "Frontend", residualRisk: "Low", status: "Passed" },
+  { id: "qap-003", surface: "Skeletons", check: "Reusable table skeleton available for async migration", finding: "Shared DataTable loading state implemented", owner: "Frontend", residualRisk: "Low", status: "Passed" },
+];
+
+export const mockQaCrossBrowser: Phase12Record[] = [
+  { id: "qab-001", browser: "Chromium", device: "Desktop and Android viewport", check: "Sticky headers, drawer, overflow tables", finding: "No clipping in smoke pass", owner: "QA", residualRisk: "Low", status: "Passed" },
+  { id: "qab-002", browser: "Safari placeholder", device: "iPhone/iPad viewport", check: "Touch targets, sticky action bar, safe viewport", finding: "Manual device lab pass pending", owner: "QA", residualRisk: "Medium", status: "In progress" },
+  { id: "qab-003", browser: "Edge", device: "Windows desktop", check: "Print preview, select controls, focus rings", finding: "No known blocker", owner: "IT", residualRisk: "Low", status: "Passed" },
+];
+
+export const mockQaPrintExport: Phase12Record[] = [
+  { id: "qae-001", report: "Audit and integration logs", printSafeLayout: "Light surface with masked payload", hiddenControls: "Navigation/actions hidden placeholder", exportState: "Backend pending", owner: "Product", status: "Passed" },
+  { id: "qae-002", report: "Encryption and DR reports", printSafeLayout: "Key aliases masked", hiddenControls: "Rotate/restore disabled", exportState: "Placeholder only", owner: "Compliance", status: "Review pending" },
+  { id: "qae-003", report: "Final sign-off", printSafeLayout: "Release metadata reserved", hiddenControls: "Draft controls hidden", exportState: "PDF export future", owner: "Hospital Admin", status: "Passed" },
+];
+
+export const mockQaReleaseReadiness: Phase12Record[] = [
+  { id: "qag-001", gate: "Route coverage", requirement: "All Phase 12 routes render under app shell", evidence: "47 route smoke pass", owner: "Frontend", blocker: "None", status: "Passed" },
+  { id: "qag-002", gate: "Accessibility sign-off", requirement: "Keyboard, contrast, labels, screen reader review", evidence: "Manual screen-reader pass pending", owner: "QA", blocker: "Pending sign-off", status: "Blocked" },
+  { id: "qag-003", gate: "Release owner approval", requirement: "Hospital admin and compliance final review", evidence: "Sign-off placeholder reserved", owner: "Hospital Admin", blocker: "Business approval", status: "Action pending" },
 ];

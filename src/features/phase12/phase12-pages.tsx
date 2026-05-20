@@ -43,10 +43,16 @@ import {
   mockCompliance,
   mockConsents,
   mockDevices,
+  mockDisasterRecovery,
+  mockEncryptionCoverage,
   mockIntegrations,
   mockInteropMappings,
+  mockIpRules,
+  mockMessageProviderSync,
   mockMobileViews,
+  mockPaymentGatewaySync,
   mockQaChecks,
+  mockQaCrossBrowser,
   mockRemoteMonitoring,
   mockRetentionIncidents,
   mockSecurityEvents,
@@ -119,9 +125,9 @@ function titleize(value: string) {
 
 function phase12Tone(status: string): StatusTone {
   if (["Active", "Connected placeholder", "Synced", "Normal", "Resolved", "Completed", "Drill completed", "Available", "Accepted", "Passed", "Signed off"].includes(status)) return "success";
+  if (["Risk flagged", "Backup failed", "Escalated", "Restricted", "Offline placeholder", "Blocked", "Failed", "Overridden"].includes(status)) return "critical";
   if (["Configured placeholder", "Sync pending", "Syncing placeholder", "Retrying", "Key pending placeholder", "Warning", "Force logout pending", "Scheduled", "Running placeholder", "Restore requested placeholder", "Expiring soon", "Renewal required", "Pending sync placeholder", "Needs review", "Suggested", "In progress", "Review pending"].includes(status)) return "warning";
-  if (["Failed", "Error", "Revoked placeholder", "Inactive", "Disabled", "Blocked", "Withdrawn", "Expired", "Rejected", "Export failed placeholder"].includes(status)) return "danger";
-  if (["Risk flagged", "Backup failed", "Escalated", "Restricted", "Offline placeholder", "Blocked", "Failed", "Blocked", "Overridden"].includes(status)) return "critical";
+  if (["Error", "Revoked placeholder", "Inactive", "Disabled", "Withdrawn", "Expired", "Rejected", "Export failed placeholder"].includes(status)) return "danger";
   if (["Draft", "Rate limited placeholder", "Drill pending", "Waived placeholder", "Action pending"].includes(status)) return "info";
   return "muted";
 }
@@ -317,7 +323,7 @@ export function IntegrationsDashboardPage() {
     <Phase12Shell module="integrations" title="Integrations" description="Connector health, failed syncs, API status, credential expiry, retry queues, mapping gaps, and integration risk." icon={Workflow}>
       <SummaryGrid>
         <StatCard label="Configured" value={mockIntegrations.length} change="Connectors" context="Static" tone="info" icon={Workflow} />
-        <StatCard label="Failed syncs" value={mockIntegrations.filter((item) => item.status === "Failed").length + mockWebhookEvents.filter((item) => item.status === "Failed").length} change="Retry" context="Queue" tone="danger" icon={AlertTriangle} />
+        <StatCard label="Failed syncs" value={mockIntegrations.filter((item) => item.status === "Failed").length + mockWebhookEvents.filter((item) => item.status === "Failed").length + mockPaymentGatewaySync.filter((item) => item.status === "Failed").length + mockMessageProviderSync.filter((item) => item.status === "Failed").length} change="Retry" context="Queue" tone="danger" icon={AlertTriangle} />
         <StatCard label="Credential warnings" value={mockIntegrations.filter((item) => String(item.credentialExpiry).includes("Expired") || String(item.credentialExpiry).includes("days")).length} change="Rotate" context="Keys" tone="warning" icon={LockKeyhole} />
         <StatCard label="Mapping pending" value={mockInteropMappings.filter((item) => item.status !== "Synced").length} change="Review" context="HL7/FHIR" tone="critical" icon={FileCheck2} />
       </SummaryGrid>
@@ -333,9 +339,9 @@ export function SecurityDashboardPage() {
   return (
     <Phase12Shell module="security" title="Security & Compliance" description="Security posture, audit risk, access review, sessions, devices, IPs, backup, DR, consent, encryption, and compliance readiness." icon={ShieldCheck}>
       <SummaryGrid>
-        <StatCard label="Risk events" value={mockSecurityEvents.filter((item) => item.status === "Risk flagged" || item.status === "Blocked").length} change="Review" context="Audit" tone="critical" icon={ShieldCheck} />
+        <StatCard label="Risk events" value={mockSecurityEvents.filter((item) => item.status === "Risk flagged" || item.status === "Blocked").length + mockIpRules.filter((item) => item.status === "Blocked").length + mockEncryptionCoverage.filter((item) => item.status === "Risk flagged").length} change="Review" context="Audit" tone="critical" icon={ShieldCheck} />
         <StatCard label="Suspicious sessions" value={mockSessions.filter((item) => item.status !== "Normal").length} change="Action" context="Sessions" tone="danger" icon={MonitorSmartphone} />
-        <StatCard label="Backup issues" value={mockBackups.filter((item) => item.status !== "Completed").length} change="Restore" context="DR" tone="warning" icon={RefreshCcw} />
+        <StatCard label="Backup issues" value={mockBackups.filter((item) => item.status !== "Completed").length + mockDisasterRecovery.filter((item) => item.status !== "Drill completed").length} change="Restore" context="DR" tone="warning" icon={RefreshCcw} />
         <StatCard label="Consent restricted" value={mockConsents.filter((item) => item.status !== "Active").length} change="Privacy" context="Patients" tone="critical" icon={LockKeyhole} />
         <StatCard label="Compliance gaps" value={mockCompliance.filter((item) => item.status !== "Resolved").length} change="Owner" context="Checklist" tone="warning" icon={FileCheck2} />
       </SummaryGrid>
@@ -376,6 +382,28 @@ function MobilePreview({ records }: { records: Phase12Record[] }) {
         </div>
       </div>
     </div>
+  );
+}
+
+export function MobileRolePage({
+  title,
+  description,
+  roleView,
+  records,
+}: {
+  title: string;
+  description: string;
+  roleView: string;
+  records: Phase12Record[];
+}) {
+  const previewRecords = mockMobileViews.filter((item) => item.roleView === roleView);
+  return (
+    <Phase12Shell module="mobile" title={title} description={description} icon={Smartphone}>
+      <div className="grid gap-4 xl:grid-cols-[360px_1fr]">
+        <MobilePreview records={previewRecords} />
+        <SimpleWorkflowPage module="mobile" records={records} hideShell />
+      </div>
+    </Phase12Shell>
   );
 }
 
@@ -463,10 +491,16 @@ export {
   mockCompliance,
   mockConsents,
   mockDevices,
+  mockDisasterRecovery,
+  mockEncryptionCoverage,
   mockIntegrations,
   mockInteropMappings,
+  mockIpRules,
+  mockMessageProviderSync,
   mockMobileViews,
+  mockPaymentGatewaySync,
   mockQaChecks,
+  mockQaCrossBrowser,
   mockRemoteMonitoring,
   mockRetentionIncidents,
   mockSecurityEvents,
