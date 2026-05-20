@@ -552,3 +552,114 @@ export type ClinicalTemplate = {
   status: "Active" | "Inactive";
   updatedAt: string;
 };
+
+export type AdmissionStatus =
+  | "Requested"
+  | "Approved"
+  | "Admitted"
+  | "Bed assigned"
+  | "In ward"
+  | "In ICU"
+  | "Transfer pending"
+  | "Discharge initiated"
+  | "Discharge approved"
+  | "Discharged"
+  | "Cancelled";
+
+export type BedStatus = "Available" | "Occupied" | "Reserved" | "Cleaning" | "Maintenance" | "Blocked" | "Isolation";
+export type NursingTaskStatus = "Pending" | "Due now" | "Overdue" | "Completed" | "Missed" | "Cancelled";
+export type MedicationAdministrationStatus = "Scheduled" | "Due" | "Administered" | "Missed" | "Held" | "Refused" | "Delayed";
+export type TriagePriority = "Red: immediate" | "Orange: very urgent" | "Yellow: urgent" | "Green: standard" | "Black/expectant placeholder";
+export type EmergencyStatus =
+  | "Registered"
+  | "Triage pending"
+  | "In triage"
+  | "In casualty"
+  | "Stabilizing"
+  | "Referred"
+  | "Admitted to IPD"
+  | "Discharged from emergency"
+  | "Deceased placeholder";
+
+export type AdmissionRecord = {
+  id: string;
+  admissionNo: string;
+  patientId: string;
+  department: string;
+  consultant: string;
+  admissionType: "Planned" | "Emergency" | "Transfer" | "Day care placeholder";
+  admittedAt: string;
+  bedId: string;
+  ward: string;
+  status: AdmissionStatus;
+  diagnosis: string;
+  priority: OperationalPriority;
+};
+
+export type BedRecord = {
+  id: string;
+  bedNo: string;
+  ward: string;
+  roomNo: string;
+  bedType: "General" | "Semi-private" | "Private" | "ICU" | "Isolation";
+  status: BedStatus;
+  patientId?: string;
+  consultant?: string;
+  isIsolationCapable: boolean;
+  genderRestriction: "Any" | "Male" | "Female";
+  lastStatusChangedAt: string;
+  statusReason: string;
+};
+
+export type NursingTask = {
+  id: string;
+  admissionId: string;
+  patientId: string;
+  bedNo: string;
+  task: string;
+  category: "Medication" | "Vitals" | "Assessment" | "Handoff" | "Safety";
+  dueAt: string;
+  status: NursingTaskStatus;
+  risk: RiskLevel;
+};
+
+export type MedicationAdministrationRecord = {
+  id: string;
+  patientId: string;
+  admissionId: string;
+  medicineName: string;
+  dose: string;
+  route: string;
+  dueTime: string;
+  status: MedicationAdministrationStatus;
+  administeredBy: string;
+  administeredAt: string;
+  reason: string;
+  safetyChecks: string[];
+};
+
+export type EmergencyCase = {
+  id: string;
+  caseNo: string;
+  patientId: string;
+  arrivalTime: string;
+  chiefComplaint: string;
+  arrivalMode: "Walk-in" | "Ambulance" | "Referral" | "Police";
+  priority: TriagePriority;
+  status: EmergencyStatus;
+  assignedArea: string;
+};
+
+export type AmbulanceRequest = {
+  id: string;
+  requestNo: string;
+  callerName: string;
+  patientId?: string;
+  pickupLocation: string;
+  destination: string;
+  ambulanceNo: string;
+  driverName: string;
+  status: "Requested" | "Assigned" | "Dispatched" | "Picked up" | "Arriving" | "Arrived" | "Cancelled";
+  eta: string;
+  delayReason?: string;
+};
