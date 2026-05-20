@@ -181,3 +181,118 @@ export type AuditLog = {
   after: string;
   sensitiveFieldsMasked: boolean;
 };
+
+export type PatientStatus =
+  | "Active"
+  | "Inactive"
+  | "Unknown emergency"
+  | "Deceased"
+  | "Merged placeholder"
+  | "Duplicate review"
+  | "Archived placeholder";
+
+export type PatientGender = "Female" | "Male" | "Other" | "Unknown";
+export type AbhaStatus = "Not linked" | "Link pending" | "Linked" | "Verification failed" | "Consent required" | "Sync pending";
+
+export type PatientRecord = {
+  id: string;
+  uhid: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  dateOfBirth: string;
+  age: number;
+  gender: PatientGender;
+  bloodGroup: string;
+  mobile: string;
+  maskedMobile: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  pinCode: string;
+  status: PatientStatus;
+  abhaStatus: AbhaStatus;
+  lastVisitAt: string;
+  department: string;
+  alertFlags: string[];
+  identityCompleteness: number;
+  isMinor: boolean;
+  guardianRequired: boolean;
+  maskedIdNumber: string;
+  documentStatus: "Verified" | "Pending verification" | "Rejected" | "Expired";
+};
+
+export type PatientVisit = {
+  id: string;
+  patientId: string;
+  visitType: "OPD" | "IPD" | "Emergency" | "Lab" | "Radiology" | "Pharmacy" | "Billing";
+  department: string;
+  provider: string;
+  referenceNumber: string;
+  status: "Completed" | "Active" | "Pending" | "Cancelled";
+  visitedAt: string;
+  summary: string;
+  amount: string;
+};
+
+export type FamilyMember = {
+  id: string;
+  patientId: string;
+  name: string;
+  relationship: string;
+  linkedUhid?: string;
+  ageGender: string;
+  mobile: string;
+  primaryContact: boolean;
+  status: "Linked" | "Not linked" | "Emergency contact";
+};
+
+export type PatientDocument = {
+  id: string;
+  patientId: string;
+  name: string;
+  category: string;
+  fileType: "PDF" | "JPG" | "PNG";
+  uploadedAt: string;
+  uploadedBy: string;
+  verificationStatus: "Pending verification" | "Verified" | "Rejected" | "Expired" | "Archived";
+  linkedVisitId?: string;
+  comments: string;
+};
+
+export type ConsentForm = {
+  id: string;
+  patientId: string;
+  type: string;
+  version: string;
+  status: "Not signed" | "Signed" | "Expired" | "Withdrawn" | "Pending guardian";
+  signedBy: string;
+  relationship: string;
+  signedAt: string;
+  expiresAt: string;
+  linkedVisitId?: string;
+};
+
+export type DuplicatePatientMatch = {
+  id: string;
+  primaryPatientId: string;
+  matchedPatientId: string;
+  matchReason: string;
+  confidence: number;
+  status: "Pending review" | "Merge requested" | "Not duplicate" | "Resolved";
+  createdAt: string;
+};
+
+export type EmergencyPatient = {
+  id: string;
+  temporaryId: string;
+  approxAge: number;
+  gender: PatientGender;
+  broughtBy: string;
+  contactNumber: string;
+  department: string;
+  identityMarks: string;
+  unknownReason: string;
+  status: "Unknown emergency";
+};

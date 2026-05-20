@@ -64,7 +64,7 @@ export const navigationItems: NavigationItem[] = [
   { id: "admin-security", label: "Security", icon: ShieldCheck, route: "/admin/security", group: "Admin Setup", allowedRoles: ["Super Admin", "Hospital Admin"], status: "ready" },
   { id: "admin-audit", label: "Audit Logs", icon: Archive, route: "/admin/audit-logs", group: "Admin Setup", allowedRoles: ["Super Admin", "Hospital Admin", "Management"], status: "ready" },
   { id: "front-office", label: "Front Office", icon: Home, route: "/front-office", group: "Operations", allowedRoles: ["Super Admin", "Hospital Admin", "Receptionist"], status: "planned" },
-  { id: "patients", label: "Patient", icon: IdCard, route: "/patients", group: "Clinical", allowedRoles: allRoles, status: "planned" },
+  { id: "patients", label: "Patient", icon: IdCard, route: "/patients", group: "Clinical", allowedRoles: allRoles, status: "ready" },
   { id: "appointments", label: "Appointment", icon: CalendarClock, route: "/appointments", group: "Clinical", allowedRoles: allRoles, status: "planned" },
   { id: "opd", label: "OPD", icon: Stethoscope, route: "/opd", group: "Clinical", allowedRoles: ["Super Admin", "Hospital Admin", "Doctor", "Nurse", "Receptionist"], status: "planned" },
   { id: "ipd", label: "IPD", icon: BedDouble, route: "/ipd", group: "Clinical", allowedRoles: ["Super Admin", "Hospital Admin", "Doctor", "Nurse"], status: "planned" },
@@ -90,7 +90,7 @@ export const navigationItems: NavigationItem[] = [
 ];
 
 export const dashboardQuickActions = [
-  { id: "register", label: "Register patient", icon: IdCard, route: "/patients" },
+  { id: "register", label: "Register patient", icon: IdCard, route: "/patients/register" },
   { id: "consult", label: "Start OPD", icon: Stethoscope, route: "/opd" },
   { id: "admit", label: "Admit patient", icon: BedDouble, route: "/ipd" },
   { id: "sample", label: "Lab worklist", icon: Microscope, route: "/laboratory" },
