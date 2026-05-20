@@ -1082,3 +1082,214 @@ export type RadiologySafetyChecklist = {
   completedBy: string;
   completedAt: string;
 };
+
+export type PrescriptionDispenseStatus =
+  | "Pending"
+  | "Partially dispensed"
+  | "Dispensed"
+  | "On hold"
+  | "Cancelled"
+  | "Substitution requested placeholder"
+  | "Returned placeholder";
+
+export type StockStatus = "In stock" | "Low stock" | "Critical stock" | "Out of stock" | "Reserved" | "Quarantined" | "Expired" | "Near expiry";
+export type PurchaseStatus = "Draft" | "Requested" | "Approved placeholder" | "Ordered" | "Partially received" | "Received" | "Cancelled" | "Rejected placeholder";
+export type StockTransferStatus = "Requested" | "Approved placeholder" | "Issued" | "In transit" | "Received" | "Partially received" | "Rejected" | "Cancelled";
+export type OtStatus = "Scheduled" | "Pre-op pending" | "Ready for surgery" | "In surgery" | "Recovery" | "Completed" | "Cancelled" | "Delayed";
+export type InstrumentStatus = "Available" | "In use" | "Used" | "Cleaning" | "Sterilization pending" | "Sterilized" | "Missing" | "Damaged" | "Quarantined";
+
+export type PharmacyPrescription = {
+  id: string;
+  prescriptionNo: string;
+  patientId: string;
+  source: "OPD" | "IPD" | "Emergency";
+  doctor: string;
+  department: string;
+  status: PrescriptionDispenseStatus;
+  medicineCount: number;
+  allergyAlert: string;
+  stockStatus: StockStatus;
+  priority: "Routine" | "Urgent" | "Emergency" | "Controlled medicine placeholder";
+  createdAt: string;
+};
+
+export type DispenseItem = {
+  id: string;
+  prescriptionId: string;
+  medicine: string;
+  dose: string;
+  requestedQty: number;
+  availableQty: number;
+  batchNo: string;
+  expiryDate: string;
+  dispenseQty: number;
+  substitutionStatus: "Not required" | "Requested placeholder" | "Approved placeholder" | "Rejected placeholder";
+  alerts: string[];
+};
+
+export type StockItem = {
+  id: string;
+  itemCode: string;
+  name: string;
+  genericName: string;
+  category: "Medicine" | "Consumable" | "Surgical" | "Implant" | "Asset placeholder";
+  unit: string;
+  stock: number;
+  reorderLevel: number;
+  criticalLevel: number;
+  nearExpiry: number;
+  expired: number;
+  status: StockStatus;
+};
+
+export type StockBatch = {
+  id: string;
+  itemId: string;
+  batchNo: string;
+  vendorId: string;
+  receivedAt: string;
+  expiryDate: string;
+  quantity: number;
+  saleableQuantity: number;
+  quarantinedQuantity: number;
+  status: StockStatus;
+};
+
+export type PurchaseRequest = {
+  id: string;
+  requestNo: string;
+  department: string;
+  items: string[];
+  requestedBy: string;
+  priority: "Routine" | "Urgent" | "Critical";
+  status: PurchaseStatus;
+  requestedAt: string;
+};
+
+export type PurchaseOrder = {
+  id: string;
+  poNo: string;
+  vendorId: string;
+  items: string[];
+  expectedDate: string;
+  amount: string;
+  status: PurchaseStatus;
+};
+
+export type VendorRecord = {
+  id: string;
+  vendorName: string;
+  code: string;
+  contact: string;
+  category: "Pharmacy" | "Store" | "Surgical" | "Equipment";
+  rating: string;
+  lastPurchase: string;
+  status: "Active" | "On hold" | "Blacklisted placeholder" | "Review";
+};
+
+export type StockAuditRecord = {
+  id: string;
+  itemId: string;
+  location: string;
+  systemStock: number;
+  physicalStock: number;
+  variance: number;
+  status: "Pending count" | "Variance found" | "Approval pending" | "Approved placeholder" | "Rejected placeholder";
+  reason: string;
+};
+
+export type GrnRecord = {
+  id: string;
+  grnNo: string;
+  poId: string;
+  vendorId: string;
+  receivedAt: string;
+  items: string[];
+  qualityStatus: "Pending QC" | "Accepted" | "Damaged" | "Rejected placeholder" | "Short received" | "Extra received placeholder";
+  ledgerStatus: "Pending posting" | "Posted placeholder" | "Variance hold";
+};
+
+export type StockTransfer = {
+  id: string;
+  transferNo: string;
+  fromLocation: string;
+  toLocation: string;
+  items: string[];
+  requestedBy: string;
+  status: StockTransferStatus;
+  custody: string;
+  variance: string;
+};
+
+export type AssetRecord = {
+  id: string;
+  assetCode: string;
+  name: string;
+  category: string;
+  assignedTo: string;
+  location: string;
+  maintenanceStatus: "Active" | "Due" | "Under maintenance" | "Retired placeholder";
+  status: "Assigned" | "Available" | "Service hold" | "Lost placeholder";
+};
+
+export type OtSurgery = {
+  id: string;
+  patientId: string;
+  admissionId: string;
+  procedure: string;
+  surgeon: string;
+  anesthetist: string;
+  otRoom: string;
+  scheduledAt: string;
+  status: OtStatus;
+  consentStatus: "Signed" | "Missing" | "Pending guardian" | "Expired placeholder";
+  instrumentStatus: InstrumentStatus;
+  checklistStatus: "Pending" | "Sign-in complete" | "Time-out complete" | "Sign-out pending" | "Complete";
+  surgicalCountStatus: "Pending" | "Matched" | "Mismatch" | "Escalated placeholder";
+};
+
+export type SurgicalCount = {
+  id: string;
+  surgeryId: string;
+  countType: "Sponge" | "Needle" | "Instrument";
+  expectedCount: number;
+  actualCount: number;
+  status: "Pending" | "Matched" | "Mismatch" | "Escalated placeholder";
+  verifiedBy: string;
+  verifiedAt: string;
+};
+
+export type InstrumentSet = {
+  id: string;
+  setCode: string;
+  name: string;
+  sterilizationStatus: InstrumentStatus;
+  sterilizationCycleId: string;
+  sterilizationExpiryAt: string;
+  currentLocation: string;
+  assignedSurgeryId: string;
+  missingItems: number;
+  damagedItems: number;
+  status: InstrumentStatus;
+};
+
+export type SterilizationCycle = {
+  id: string;
+  cycleNo: string;
+  machinePlaceholder: string;
+  startedAt: string;
+  completedAt: string;
+  indicatorResult: "Passed placeholder" | "Failed" | "Pending";
+  status: InstrumentStatus;
+  failedReason: string;
+};
+
+export type OtRoomCleaning = {
+  id: string;
+  room: string;
+  status: "Clean" | "Cleaning due" | "Cleaning in progress" | "Ready" | "Failed checklist" | "Blocked";
+  responsibleStaff: string;
+  completedAt: string;
+  infectionRisk: string;
+  releaseStatus: "Ready" | "Override required" | "Blocked" | "Pending";
+};
