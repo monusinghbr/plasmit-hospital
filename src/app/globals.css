@@ -65,11 +65,13 @@
 
 html {
   height: 100%;
+  overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
 body {
   min-height: 100%;
+  overflow-x: hidden;
   background: hsl(var(--background));
   color: hsl(var(--foreground));
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";

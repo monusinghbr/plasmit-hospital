@@ -107,8 +107,8 @@ export function ConsultationPage({ visitId }: { visitId: string }) {
           <ClinicalPatientHeader patientId={consultation.patientId} token={mockOpdWorklist.find((item) => item.visitId === visitId)?.tokenNo} appointmentTime={mockOpdWorklist.find((item) => item.visitId === visitId)?.appointmentTime} consultation={consultation} />
           <ClinicalSafetyPanel patientId={consultation.patientId} />
           <VisitContext consultation={consultation} />
-          <div className="grid gap-4 xl:grid-cols-[1fr_340px]">
-            <Tabs defaultValue="complaints" className="space-y-4">
+          <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
+            <Tabs defaultValue="complaints" className="min-w-0 space-y-4">
               <TabsList><TabsTrigger value="complaints">Chief complaints</TabsTrigger><TabsTrigger value="history">History</TabsTrigger><TabsTrigger value="exam">Examination</TabsTrigger><TabsTrigger value="vitals">Vitals</TabsTrigger><TabsTrigger value="diagnosis">Diagnosis</TabsTrigger><TabsTrigger value="rx">Prescription</TabsTrigger><TabsTrigger value="advice">Advice</TabsTrigger><TabsTrigger value="summary">Summary</TabsTrigger></TabsList>
               <TabsContent value="complaints"><NoteEditor title="Chief complaints" defaultValue={consultation.chiefComplaint} /></TabsContent>
               <TabsContent value="history"><NoteEditor title="History of present illness" defaultValue={consultation.notes} /></TabsContent>
@@ -119,7 +119,7 @@ export function ConsultationPage({ visitId }: { visitId: string }) {
               <TabsContent value="advice"><HandoffPanel consultation={consultation} /></TabsContent>
               <TabsContent value="summary"><ConsultationSummary consultation={consultation} /></TabsContent>
             </Tabs>
-            <div className="space-y-4"><CompletionChecklist /><ClinicalLinkBar /><HandoffPanel consultation={consultation} compact /></div>
+            <div className="min-w-0 space-y-4"><CompletionChecklist /><ClinicalLinkBar /><HandoffPanel consultation={consultation} compact /></div>
           </div>
           <StickyActionBar readOnly={readOnly} saveLabel="Complete consultation" />
         </>
