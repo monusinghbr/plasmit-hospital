@@ -6,8 +6,6 @@ export function AppFooter() {
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="font-medium text-foreground">Plasmit HMS</span>
-          <span>Phase 1 foundation</span>
-          <span>UI only</span>
           <span>v0.1.0</span>
         </div>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
