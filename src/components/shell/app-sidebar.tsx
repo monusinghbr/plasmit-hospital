@@ -25,7 +25,7 @@ export function AppSidebar({
   return (
     <aside
       className={cn(
-        "hidden h-dvh shrink-0 border-r border-border bg-sidebar text-sidebar-foreground transition-all lg:sticky lg:top-0 lg:flex lg:flex-col",
+        "hidden h-dvh shrink-0 border-r border-border bg-sidebar text-sidebar-foreground transition-all lg:sticky lg:top-0 lg:z-50 lg:flex lg:flex-col",
         collapsed ? "w-[72px]" : "w-[264px]",
       )}
     >
