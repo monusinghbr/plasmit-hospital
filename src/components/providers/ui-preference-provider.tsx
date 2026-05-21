@@ -21,18 +21,37 @@ type UiPreferenceContextValue = {
 };
 
 const UiPreferenceContext = React.createContext<UiPreferenceContextValue | null>(null);
+const preferenceChangeEvent = "plasmit-ui-preference-change";
+let cachedPreferenceRaw: string | null | undefined;
+let cachedPreferenceValue: UiPreference = defaultPreference;
 
 function readPreference(): UiPreference {
   if (typeof window === "undefined") return defaultPreference;
   const raw = window.localStorage.getItem(uiPreferenceStorageKey);
-  if (!raw) return defaultPreference;
+  if (raw === cachedPreferenceRaw) return cachedPreferenceValue;
+  cachedPreferenceRaw = raw;
+  if (!raw) {
+    cachedPreferenceValue = defaultPreference;
+    return cachedPreferenceValue;
+  }
   try {
     const parsed = JSON.parse(raw) as UiPreference;
-    if (parsed.version !== 1) return defaultPreference;
-    return { ...defaultPreference, ...parsed };
+    cachedPreferenceValue = parsed.version === 1 ? { ...defaultPreference, ...parsed } : defaultPreference;
+    return cachedPreferenceValue;
   } catch {
+    cachedPreferenceValue = defaultPreference;
     return defaultPreference;
   }
+}
+
+function subscribePreference(callback: () => void) {
+  if (typeof window === "undefined") return () => undefined;
+  window.addEventListener("storage", callback);
+  window.addEventListener(preferenceChangeEvent, callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener(preferenceChangeEvent, callback);
+  };
 }
 
 function softFromHsl(hsl: string) {
@@ -57,7 +76,7 @@ function applyPrimaryVariables(preference: UiPreference) {
 
 export function UiPreferenceProvider({ children }: { children: React.ReactNode }) {
   const { setTheme } = useTheme();
-  const [preference, setPreferenceState] = React.useState<UiPreference>(readPreference);
+  const preference = React.useSyncExternalStore(subscribePreference, readPreference, () => defaultPreference);
 
   React.useEffect(() => {
     setTheme(preference.mode);
@@ -66,10 +85,13 @@ export function UiPreferenceProvider({ children }: { children: React.ReactNode }
 
   const setPreference = React.useCallback(
     (nextPreference: UiPreference) => {
-      setPreferenceState(nextPreference);
-      window.localStorage.setItem(uiPreferenceStorageKey, JSON.stringify(nextPreference));
-      setTheme(nextPreference.mode);
-      applyPrimaryVariables(nextPreference);
+      const normalizedPreference = { ...nextPreference, version: 1 as const };
+      cachedPreferenceValue = normalizedPreference;
+      cachedPreferenceRaw = JSON.stringify(normalizedPreference);
+      window.localStorage.setItem(uiPreferenceStorageKey, cachedPreferenceRaw);
+      setTheme(normalizedPreference.mode);
+      applyPrimaryVariables(normalizedPreference);
+      window.dispatchEvent(new Event(preferenceChangeEvent));
     },
     [setTheme],
   );

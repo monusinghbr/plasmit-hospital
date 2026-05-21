@@ -13,7 +13,14 @@ import type { UiPreference } from "@/types";
 
 export function ThemeSettingsPanel() {
   const { preference, setPreference, resetPreference } = useUiPreference();
-  const [draft, setDraft] = React.useState<UiPreference>(preference);
+  const preferenceKey = JSON.stringify(preference);
+  const [draftState, setDraftState] = React.useState<{ key: string; value: UiPreference }>(() => ({
+    key: preferenceKey,
+    value: preference,
+  }));
+
+  const draft = draftState.key === preferenceKey ? draftState.value : preference;
+  const setDraft = (value: UiPreference) => setDraftState({ key: preferenceKey, value });
 
   const customInvalid = draft.colorPreset === "custom" && draft.customPrimary ? !isHexColor(draft.customPrimary) : false;
 
