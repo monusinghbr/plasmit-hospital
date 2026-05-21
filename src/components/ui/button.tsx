@@ -16,10 +16,10 @@ const buttonVariants = cva(
         danger: "bg-danger text-danger-foreground hover:brightness-95",
       },
       size: {
-        sm: "h-8 px-3 text-xs",
-        md: "h-9 px-4",
-        lg: "h-10 px-5",
-        icon: "h-9 w-9",
+        sm: "h-[var(--density-control-height-sm)] px-[var(--density-control-x-sm)] text-xs",
+        md: "h-[var(--density-control-height)] px-[var(--density-control-x)]",
+        lg: "h-[var(--density-control-height-lg)] px-[var(--density-control-x-lg)]",
+        icon: "h-[var(--density-control-height)] w-[var(--density-control-height)]",
       },
     },
     defaultVariants: {

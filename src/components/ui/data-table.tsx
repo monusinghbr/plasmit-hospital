@@ -38,7 +38,7 @@ export function DataTable<TData>({
         <Skeleton className="h-8 w-full" />
         <div className="mt-3 space-y-2">
           {Array.from({ length: 5 }).map((_, index) => (
-            <Skeleton className="h-10 w-full" key={index} />
+            <Skeleton className="h-[var(--density-control-height-lg)] w-full" key={index} />
           ))}
         </div>
       </div>
@@ -57,7 +57,7 @@ export function DataTable<TData>({
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th className="border-b border-border px-3 py-2" key={header.id}>
+                  <th className="border-b border-border px-[var(--density-table-cell-x)] py-[var(--density-table-cell-y)]" key={header.id}>
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
                 ))}
@@ -68,7 +68,7 @@ export function DataTable<TData>({
             {table.getRowModel().rows.map((row) => (
               <tr className="border-b border-border last:border-0 hover:bg-surface-muted/70" key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <td className="px-3 py-2 align-middle text-foreground" key={cell.id}>
+                    <td className="px-[var(--density-table-cell-x)] py-[var(--density-table-cell-y)] align-middle text-foreground" key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
@@ -77,7 +77,7 @@ export function DataTable<TData>({
           </tbody>
         </table>
       </div>
-      <div className="flex items-center justify-between border-t border-border px-3 py-2 text-xs text-muted-foreground">
+      <div className="flex items-center justify-between border-t border-border px-[var(--density-table-cell-x)] py-[var(--density-table-cell-y)] text-xs text-muted-foreground">
         <span>{data.length} static records • Page 1 of 1</span>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" disabled>

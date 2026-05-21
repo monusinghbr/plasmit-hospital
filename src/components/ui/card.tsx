@@ -7,7 +7,7 @@ export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
 }
 
 export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex items-start justify-between gap-4 border-b border-border px-4 py-3", className)} {...props} />;
+  return <div className={cn("flex items-start justify-between gap-4 border-b border-border px-[var(--density-card-header-x)] py-[var(--density-card-header-y)]", className)} {...props} />;
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
@@ -19,5 +19,5 @@ export function CardDescription({ className, ...props }: React.HTMLAttributes<HT
 }
 
 export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("p-4", className)} {...props} />;
+  return <div className={cn("p-[var(--density-card-padding)]", className)} {...props} />;
 }
