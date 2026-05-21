@@ -104,7 +104,7 @@ export function DashboardPage() {
               return (
                 <Button asChild className="h-auto justify-start p-3" key={action.id} variant="outline">
                   <Link href={action.route}>
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-soft text-primary">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                       <Icon className="h-4 w-4" />
                     </span>
                     <span className="text-left">

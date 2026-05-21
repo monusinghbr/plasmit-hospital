@@ -37,7 +37,7 @@ export function ThemeSettingsPanel() {
                 <button
                   className={cn(
                     "rounded-lg border border-border bg-surface p-3 text-left text-sm outline-none transition hover:bg-surface-muted focus-visible:ring-2 focus-visible:ring-ring",
-                    draft.mode === mode && "border-primary bg-primary-soft",
+                    draft.mode === mode && "border-primary bg-primary/10 ring-1 ring-primary/20",
                   )}
                   key={mode}
                   onClick={() => setDraft({ ...draft, mode })}
@@ -63,7 +63,7 @@ export function ThemeSettingsPanel() {
                 <button
                   className={cn(
                     "flex items-center gap-3 rounded-lg border border-border bg-surface p-3 text-left outline-none transition hover:bg-surface-muted focus-visible:ring-2 focus-visible:ring-ring",
-                    draft.colorPreset === preset.id && "border-primary bg-primary-soft",
+                    draft.colorPreset === preset.id && "border-primary bg-primary/10 ring-1 ring-primary/20",
                   )}
                   key={preset.id}
                   onClick={() => setDraft({ ...draft, colorPreset: preset.id })}

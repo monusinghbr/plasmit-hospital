@@ -27,7 +27,7 @@ export function RoleSwitcher({ className }: { className?: string }) {
           <Select.Viewport className="p-1">
             {roles.map((item) => (
               <Select.Item
-                className="cursor-pointer rounded px-2 py-2 text-sm text-foreground outline-none hover:bg-surface-muted focus:bg-surface-muted data-[state=checked]:bg-primary-soft"
+                className="cursor-pointer rounded px-2 py-2 text-sm text-foreground outline-none hover:bg-surface-muted focus:bg-surface-muted data-[state=checked]:bg-primary/10"
                 key={item}
                 value={item}
               >

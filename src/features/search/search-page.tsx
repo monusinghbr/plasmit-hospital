@@ -62,7 +62,7 @@ export function SearchPage() {
                             href={result.route}
                             key={result.id}
                           >
-                            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-xs font-semibold text-primary">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-xs font-semibold text-primary">
                               {result.type.slice(0, 2)}
                             </div>
                             <div className="min-w-0 flex-1">
